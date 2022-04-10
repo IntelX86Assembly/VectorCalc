@@ -17,235 +17,339 @@ from Vector2D import *
 from Vector2D_Graph import *
 ######################################################################
 
-#Refreshes the frame and adds widgets back for plotting single vectors
-def plotSingle2DVector(refreshFrame):
 
-    def plotVector(vector_x, vector_y):
-            #convert data from text boxes to float and store
-            x_component = float(vector_x)
-            y_component = float(vector_y)
-            
-            #Instantiate a vector with an x and y component from the 
-            #Vector2D_Components class
-            vector1 = Vector2D(x_component, y_component)
-
-            #This creates a graph object and plots a single vector
-            graph = Vector2D_Graph()
-            graph.graphSingleVector(vector1)
-   
-
-    #clears the frame first before we add widgets back
-    for widget in refreshFrame.winfo_children():
-        widget.destroy()
+#lass createListOfVectors():
     
-
-    #Top Label widget
-    ttk.Label(refreshFrame, text="Enter Vector Components", font="bold").grid(column=1, row=1, padx=(20,20), pady=(20,20))
-
-    ##Label and input box for x component
-    ttk.Label(refreshFrame, text="X-Component").grid(column=1, row=2)
-    vector_x_entry = ttk.Entry(refreshFrame, width=20)
-    vector_x_entry.grid(pady=(10,10), column=1, row=3)
-    
-    #Label and input box for y component
-    ttk.Label(refreshFrame, text="Y-Component").grid(column=1, row=4)
-    vector_y_entry = ttk.Entry(refreshFrame, width=20)
-    vector_y_entry.grid(pady=(10,10), column=1, row=5)
- 
-    #Plots the vector on a graph
-    button1 = ttk.Button(refreshFrame, text="Plot Vector", width = 20, command=lambda: plotVector(vector_x_entry.get(), vector_y_entry.get()))
-    button1.grid(pady=(30,0), column=1, row=8)
-
-
-
-
-#Refreshes the frame and adds widgets back for plotting multiple vectors
-def plotMultiple2DVectors(refreshFrame):
+#   self.vectorList = []
 
     #When the user clicks the "Add Vector" button this method is called.
     #It takes a list and creates a new Vector2D object before adding it to
     #this list. In addition it displays the user entered values to the right
     #to keep track of what they are entering.
-    vectorList = []
-    def addVectorToList(vector_x, vector_y, vectorList, Frame):
+#    def addVectorToList(self, vectorX, vectorY, Frame):
         #Create a Vector2D object and add it to our list
-        vectorList.append(Vector2D(float(vector_x), float(vector_y)))
+#        vectorList.append(Vector2D(float(vectorX), float(vectorY)))
         #The "vectors" variable holds the string displayed in the right column
-        vectors = "" 
-        counter = 1
+#       self.vectors = "" 
+#       self.counter = 1
+        #For every vector in the list we are adding them to do the following
+#       for vector in vectorList:
+            #Create a string that displays user entered values
+#           self.vectors = self.vectors + "\n" + "Vector " + str(self.counter) +  ":   X = " + str(vector.get_x_component()) + "   Y = " + str(vector.get_y_component()) 
+#           self.counter = self.counter + 1
+        #Displays "vectors" string in gui
+#       self.listOfVectors = ttk.Label(Frame, text=self.vectors)
+#       self.listOfVectors.grid(padx=(40, 40), column=1, row=2)
+
+
+#Refreshes the frame and adds widgets back for plotting single vectors
+def redrawFrame(refreshFrame, frameToBeDrawn):
+
+    #clears the frame first before we add widgets back when we redraw it.
+    for widget in refreshFrame.winfo_children():
+        widget.destroy()
+
+    #Defines what frame will be drawn dependent on the menu item selected by the user.
+    if(frameToBeDrawn == "plotSingle2DVector"):
+        window = redrawFrameSingle2DVector(refreshFrame)
+    elif(frameToBeDrawn == "plotMultiple2DVectors"):
+        window = redrawFrameMultiple2DVectors(refreshFrame)
+    elif(frameToBeDrawn == "findResultant2DVectors"):
+        window = redrawFrameResultant2DVectors(refreshFrame)
+    elif(frameToBeDrawn == "findEquilibrium2DVectors"):
+        window = redrawFrameEquilibrium2DVectors(refreshFrame)
+
+
+#Adds widgets back for plotting single vectors
+class redrawFrameSingle2DVector():
+
+    def __init__(self, refreshFrame):
+
+        #clears the frame first before we add widgets back
+        for widget in refreshFrame.winfo_children():
+            widget.destroy()
+        
+
+        #Top Label widget
+        self.vectorEntryLabel = ttk.Label(refreshFrame, text="Enter Vector Components", font="bold")
+        self.vectorEntryLabel.grid(column=1, row=1, padx=(20,20), pady=(20,20))
+
+        #Label and input box for x component
+        self.componentLabelX = ttk.Label(refreshFrame, text="X-Component")
+        self.componentLabelX.grid(column=1, row=2)
+        
+        #Entry box for the x component
+        self.vectorEntryX = ttk.Entry(refreshFrame, width=20)
+        self.vectorEntryX.grid(pady=(10,10), column=1, row=3)
+        
+        #Label and input box for y component
+        self.componentLabelY = ttk.Label(refreshFrame, text="Y-Component")
+        self.componentLabelY.grid(column=1, row=4)
+        
+        #Entry box for the y component
+        self.vectorEntryY = ttk.Entry(refreshFrame, width=20)
+        self.vectorEntryY.grid(pady=(10,10), column=1, row=5)
+     
+        #Plots the vector on a graph
+        self.button1 = ttk.Button(refreshFrame, text="Plot Vector", width = 20, command=lambda: self.plotVector(self.vectorEntryX.get(), self.vectorEntryY.get()))
+        self.button1.grid(pady=(30,0), column=1, row=8)
+
+    def plotVector(self, componentX, componentY):
+        
+        #convert data from text boxes to float and store
+        self.componentX = float(componentX)
+        self.componentY = float(componentY)
+        
+        #Instantiate a vector with an x and y component from the 
+        #Vector2D_Components class
+        self.vector2D = Vector2D(self.componentX, self.componentY)
+
+        #This creates a graph object and plots a single vector
+        self.graph = Vector2D_Graph()
+        self.graph.graphSingleVector(self.vector2D)
+   
+
+
+#Adds widgets back for plotting multiple vectors
+class redrawFrameMultiple2DVectors():
+
+    #When the user clicks the "Add Vector" button this method is called.
+    #It takes a list and creates a new Vector2D object before adding it to
+    #this list. In addition it displays the user entered values to the right
+    #to keep track of what they are entering.
+    def addVectorToList(self, vectorX, vectorY, vectorList, Frame):
+        #Create a Vector2D object and add it to our list
+        self.vectorList.append(Vector2D(float(vectorX), float(vectorY)))
+        #The "vectors" variable holds the string displayed in the right column
+        self.vectors = "" 
+        self.counter = 1
         #For every vector in the list we are adding them to do the following
         for vector in vectorList:
             #Create a string that displays user entered values
-            vectors = vectors + "\n" + "Vector " + str(counter) +  ":   X = " + str(vector.get_x_component()) + "   Y = " + str(vector.get_y_component()) 
-            counter = counter + 1
+            self.vectors = self.vectors + "\n" + "Vector " + str(self.counter) +  ":   X = " + str(vector.get_x_component()) + "   Y = " + str(vector.get_y_component()) 
+            self.counter = self.counter + 1
         #Displays "vectors" string in gui
-        listOfVectors = ttk.Label(Frame, text=vectors)
-        listOfVectors.grid(padx=(40, 40), column=1, row=2)
+        self.listOfVectors = ttk.Label(Frame, text=self.vectors)
+        self.listOfVectors.grid(padx=(40, 40), column=1, row=2)
 
+
+    #TODO refactor code eventually I want to create one class for adding vectors to a list, performing operations with the list. 
+    #When the user clicks the "Add Vector" button this method is called.
+    #It takes a list and creates a new Vector2D object before adding it to
+    #this list. In addition it displays the user entered values to the right
+    #to keep track of what they are entering.
+    #def addVectorToList(self, vectorX, vectorY, vectorList, Frame):
+    #    self.vectorList.addVectorToList(vectorX, vectorY, vectorList, Frame) 
 
     #Creates a graph object and calls method to graph the vectors
     #when the user clicks "Plot Vectors"
-    def multiGraph(vectorList):
-        graph = Vector2D_Graph()
-        graph.graphMultipleVectors(vectorList)
+    def multiGraph(self, vectorList):
+        self.graph = Vector2D_Graph()
+        self.graph.graphMultipleVectors(vectorList)
 
+        
+    def __init__(self, refreshFrame):
+
+        #declares a list of vectors that will be used to pass as arguments to methods
+        #TODO create a list class that maybe uses a stack to undo the adding of vectors to the list
+        #i.e pop the last vector added to make is so actions can be undone.
+
+        self.vectorList = []
+        #self.vectorList = createListOfVectors()
+
+        #Positions children widgets to left.
+        self.leftFrame = Frame(refreshFrame, width=360, height=720, bg = "blue")
+        self.leftFrame.grid(column=0, row=0, sticky="nwes")
+
+        #Positions children widgets to right.
+        self.rightFrame = Frame(refreshFrame, width=360, height=720, bg = "red")
+        self.rightFrame.grid(column=1, row=0, sticky = "nwes")
+
+        #Top Label widget
+        self.vectorEntryLabel = ttk.Label(self.leftFrame, text="Enter Multiple Vector Components", font="bold")
+        self.vectorEntryLabel.grid(column=1, row=1, padx=(20,20), pady=(20,20), sticky=(W))
+
+        #Label and input box for x component
+        self.componentLabelX = ttk.Label(self.leftFrame, text="X-Component")
+        self.componentLabelX.grid(column=1, row=2)
+        
+        #Entry box for the x component
+        self.vectorEntryX = ttk.Entry(self.leftFrame, width=20)
+        self.vectorEntryX.grid(pady=(10,10), column=1, row=3)
+        
+        #Label and input box for y component
+        self.componentLabelY = ttk.Label(self.leftFrame, text="Y-Component")
+        self.componentLabelY.grid(column=1, row=4)
+     
+        #Entry box for the y component
+        self.vectorEntryY = ttk.Entry(self.leftFrame, width=20)
+        self.vectorEntryY.grid(pady=(10,10), column=1, row=5)
+
+        #Add vector to list of vectors to graph
+        self.addVectorButton = ttk.Button(self.leftFrame, text="Add Vector", width=20, command=lambda: self.addVectorToList(self.vectorEntryX.get(), self.vectorEntryY.get(), self.vectorList, self.rightFrame))
+        self.addVectorButton.grid(column=1, row=6)
+
+        #Plots the vectors on a graph.
+        self.button3 = ttk.Button(self.leftFrame, text="Plot Vectors", width=20, command=lambda: self.multiGraph(self.vectorList))
+        self.button3.grid(pady=(30,0), column=1, row=7)
     
-
-    #clears the frame first before we add widgets back
-    for widget in refreshFrame.winfo_children():
-        widget.destroy()
-    
-    leftFrame = Frame(refreshFrame, width=360, height=720, bg = "blue")
-    leftFrame.grid(column=0, row=0, sticky="nwes")
-
-    rightFrame = Frame(refreshFrame, width=360, height=720, bg = "red")
-    rightFrame.grid(column=1, row=0, sticky = "nwes")
-
-    ttk.Label(leftFrame, text="Enter Multiple Vector Components", font="bold").grid(column=1, row=1, padx=(20,20), pady=(20,20), sticky=(W))
-
-    ##Label and input box for x component
-    ttk.Label(leftFrame, text="X-Component").grid(column=1, row=2)
-    vector_x_entry = ttk.Entry(leftFrame, width=20)
-    vector_x_entry.grid(pady=(10,10), column=1, row=3)
-    
-    #Label and input box for y component
-    ttk.Label(leftFrame, text="Y-Component").grid(column=1, row=4)
-    vector_y_entry = ttk.Entry(leftFrame, width=20)
-    vector_y_entry.grid(pady=(10,10), column=1, row=5)
- 
-    #TODO create list of vectors holding multiple 2D vector components so user can keep track of what they entered
-    vectorLabel = ttk.Label(rightFrame, text="Current Vectors:")
-    vectorLabel.grid(padx=(100, 100), pady=(20,20), column=1, row=1)
-  
-    #Add vector to list of vectors to graph
-    button2 = ttk.Button(leftFrame, text="Add Vector", width = 20, command=lambda: addVectorToList(vector_x_entry.get(), vector_y_entry.get(), vectorList, rightFrame))
-
-    button2.grid(column=1, row=6)
-
-    #Plots the vectors on a graph.
-    button3 = ttk.Button(leftFrame, text="Plot Vectors", width = 20, command=lambda: multiGraph(vectorList))
-    button3.grid(pady=(30,0), column=1, row=7)
-    
-    
+        #Label to show the current vectors.
+        self.currentVectorLabel = ttk.Label(self.rightFrame, text="Current Vectors:")
+        self.currentVectorLabel.grid(padx=(100, 100), pady=(20,20), column=1, row=1)
 
 
-#Refreshes the frame and adds widgets back for plotting the resultant of vectors 
-def resultant2DVector(refreshFrame):
 
-    vectorList = []
-    def addVectorToList(vector_x, vector_y, vectorList, Frame):
+#Adds widgets back for plotting multiple vectors
+class redrawFrameResultant2DVectors():
+
+    #When the user clicks the "Add Vector" button this method is called.
+    #It takes a list and creates a new Vector2D object before adding it to
+    #this list. In addition it displays the user entered values to the right
+    #to keep track of what they are entering.
+    def addVectorToList(self, vectorX, vectorY, vectorList, Frame):
         #Create a Vector2D object and add it to our list
-        vectorList.append(Vector2D(float(vector_x), float(vector_y)))
+        self.vectorList.append(Vector2D(float(vectorX), float(vectorY)))
         #The "vectors" variable holds the string displayed in the right column
-        vectors = "" 
-        counter = 1
+        self.vectors = "" 
+        self.counter = 1
         #For every vector in the list we are adding them to do the following
         for vector in vectorList:
             #Create a string that displays user entered values
-            vectors = vectors + "\n" + "Vector " + str(counter) +  ":   X = " + str(vector.get_x_component()) + "   Y = " + str(vector.get_y_component()) 
-            counter = counter + 1
+            self.vectors = self.vectors + "\n" + "Vector " + str(self.counter) +  ":   X = " + str(vector.get_x_component()) + "   Y = " + str(vector.get_y_component()) 
+            self.counter = self.counter + 1
         #Displays "vectors" string in gui
-        listOfVectors = ttk.Label(Frame, text=vectors)
-        listOfVectors.grid(padx=(40, 40), column=1, row=2)
+        self.listOfVectors = ttk.Label(Frame, text=self.vectors)
+        self.listOfVectors.grid(padx=(40, 40), column=1, row=2)
 
-    def resultantGraph(vectorList):
-        graph = Vector2D_Graph()
-        graph.graphResultant(vectorList)
+    def resultantGraph(self, vectorList):
+        self.graph = Vector2D_Graph()
+        self.graph.graphResultant(vectorList)
     
 
-    #clears the frame first before we add widgets back
-    for widget in refreshFrame.winfo_children():
-        widget.destroy()
+    def __init__(self, refreshFrame):
 
-    leftFrame = Frame(refreshFrame, width=360, height=720, bg = "blue")
-    leftFrame.grid(column=0, row=0, sticky="nwes")
+        #declares a list of vectors that will be used to pass as arguments to methods
+        #TODO create a list class that maybe uses a stack to undo the adding of vectors to the list
+        #i.e pop the last vector added to make is so actions can be undone.
 
-    rightFrame = Frame(refreshFrame, width=360, height=720, bg = "red")
-    rightFrame.grid(column=1, row=0, sticky = "nwes")
+        self.vectorList = []
 
-    ttk.Label(leftFrame, text="Enter Multiple Vector Components", font="bold").grid(column=1, row=1, padx=(20,20), pady=(20,20), sticky=(W))
+        #Positions children widgets to left.
+        self.leftFrame = Frame(refreshFrame, width=360, height=720, bg = "blue")
+        self.leftFrame.grid(column=0, row=0, sticky="nwes")
 
-    ##Label and input box for x component
-    ttk.Label(leftFrame, text="X-Component").grid(column=1, row=2)
-    vector_x_entry = ttk.Entry(leftFrame, width=20)
-    vector_x_entry.grid(pady=(10,10), column=1, row=3)
+        #Positions children widgets to right.
+        self.rightFrame = Frame(refreshFrame, width=360, height=720, bg = "red")
+        self.rightFrame.grid(column=1, row=0, sticky = "nwes")
+
+        #Top Label widget
+        self.vectorEntryLabel = ttk.Label(self.leftFrame, text="Enter Multiple Vector Components", font="bold")
+        self.vectorEntryLabel.grid(column=1, row=1, padx=(20,20), pady=(20,20), sticky=(W))
+
+        #Label and input box for x component
+        self.componentLabelX = ttk.Label(self.leftFrame, text="X-Component")
+        self.componentLabelX.grid(column=1, row=2)
+        
+        #Entry box for the x component
+        self.vectorEntryX = ttk.Entry(self.leftFrame, width=20)
+        self.vectorEntryX.grid(pady=(10,10), column=1, row=3)
+        
+        #Label and input box for y component
+        self.componentLabelY = ttk.Label(self.leftFrame, text="Y-Component")
+        self.componentLabelY.grid(column=1, row=4)
+     
+        #Entry box for the y component
+        self.vectorEntryY = ttk.Entry(self.leftFrame, width=20)
+        self.vectorEntryY.grid(pady=(10,10), column=1, row=5)
+
+        #Add vector to list of vectors to graph
+        self.addVectorButton = ttk.Button(self.leftFrame, text="Add Vector", width=20, command=lambda: self.addVectorToList(self.vectorEntryX.get(), self.vectorEntryY.get(), self.vectorList, self.rightFrame))
+        self.addVectorButton.grid(column=1, row=6)
+
+        #Plots the vectors on a graph.
+        self.button3 = ttk.Button(self.leftFrame, text="Find Resultant", width=20, command=lambda: self.resultantGraph(self.vectorList))
+        self.button3.grid(pady=(30,0), column=1, row=7)
     
-    #Label and input box for y component
-    ttk.Label(leftFrame, text="Y-Component").grid(column=1, row=4)
-    vector_y_entry = ttk.Entry(leftFrame, width=20)
-    vector_y_entry.grid(pady=(10,10), column=1, row=5)
- 
-    #TODO create list of vectors holding multiple 2D vector components so user can keep track of what they entered
-    vectorLabel = ttk.Label(rightFrame, text="Current Vectors:")
-    vectorLabel.grid(padx=(100, 100), pady=(20,20), column=1, row=1)
-  
-    #Add vector to list of vectors to graph
-    button2 = ttk.Button(leftFrame, text="Add Vector", width = 20, command=lambda: addVectorToList(vector_x_entry.get(), vector_y_entry.get(), vectorList, rightFrame))
+        #Label to show the current vectors.
+        self.currentVectorLabel = ttk.Label(self.rightFrame, text="Current Vectors:")
+        self.currentVectorLabel.grid(padx=(100, 100), pady=(20,20), column=1, row=1)
 
-    button2.grid(column=1, row=6)
-
-    #Plots the vectors on a graph.
-    button3 = ttk.Button(leftFrame, text="Find Resultant", width = 20, command=lambda: resultantGraph(vectorList))
-    button3.grid(pady=(30,0), column=1, row=7)
 
 #Refreshes the frame and adds widgets back for plotting the equilibrium vector to the resultant of vectors 
-def equilibrium2DVector(refreshFrame):
+class redrawFrameEquilibrium2DVectors():
 
-    vectorList = []
-    def addVectorToList(vector_x, vector_y, vectorList, Frame):
+    #When the user clicks the "Add Vector" button this method is called.
+    #It takes a list and creates a new Vector2D object before adding it to
+    #this list. In addition it displays the user entered values to the right
+    #to keep track of what they are entering.
+    def addVectorToList(self, vectorX, vectorY, vectorList, Frame):
         #Create a Vector2D object and add it to our list
-        vectorList.append(Vector2D(float(vector_x), float(vector_y)))
+        self.vectorList.append(Vector2D(float(vectorX), float(vectorY)))
         #The "vectors" variable holds the string displayed in the right column
-        vectors = "" 
-        counter = 1
+        self.vectors = "" 
+        self.counter = 1
         #For every vector in the list we are adding them to do the following
         for vector in vectorList:
             #Create a string that displays user entered values
-            vectors = vectors + "\n" + "Vector " + str(counter) +  ":   X = " + str(vector.get_x_component()) + "   Y = " + str(vector.get_y_component()) 
-            counter = counter + 1
+            self.vectors = self.vectors + "\n" + "Vector " + str(self.counter) +  ":   X = " + str(vector.get_x_component()) + "   Y = " + str(vector.get_y_component()) 
+            self.counter = self.counter + 1
         #Displays "vectors" string in gui
-        listOfVectors = ttk.Label(Frame, text=vectors)
-        listOfVectors.grid(padx=(40, 40), column=1, row=2)
+        self.listOfVectors = ttk.Label(Frame, text=self.vectors)
+        self.listOfVectors.grid(padx=(40, 40), column=1, row=2)
 
-    def resultantGraph(vectorList):
-        graph = Vector2D_Graph()
-        graph.graphResultant(vectorList)
+    def resultantGraph(self, vectorList):
+        self.graph = Vector2D_Graph()
+        self.graph.graphResultant(vectorList)
     
 
-    #clears the frame first before we add widgets back
-    for widget in refreshFrame.winfo_children():
-        widget.destroy()
+    def __init__(self, refreshFrame):
 
-    leftFrame = Frame(refreshFrame, width=360, height=720, bg = "blue")
-    leftFrame.grid(column=0, row=0, sticky="nwes")
+        #declares a list of vectors that will be used to pass as arguments to methods
+        #TODO create a list class that maybe uses a stack to undo the adding of vectors to the list
+        #i.e pop the last vector added to make is so actions can be undone.
 
-    rightFrame = Frame(refreshFrame, width=360, height=720, bg = "red")
-    rightFrame.grid(column=1, row=0, sticky = "nwes")
+        self.vectorList = []
 
-    ttk.Label(leftFrame, text="Enter Multiple Vector Components", font="bold").grid(column=1, row=1, padx=(20,20), pady=(20,20), sticky=(W))
+        #Positions children widgets to left.
+        self.leftFrame = Frame(refreshFrame, width=360, height=720, bg = "blue")
+        self.leftFrame.grid(column=0, row=0, sticky="nwes")
 
-    ##Label and input box for x component
-    ttk.Label(leftFrame, text="X-Component").grid(column=1, row=2)
-    vector_x_entry = ttk.Entry(leftFrame, width=20)
-    vector_x_entry.grid(pady=(10,10), column=1, row=3)
+        #Positions children widgets to right.
+        self.rightFrame = Frame(refreshFrame, width=360, height=720, bg = "red")
+        self.rightFrame.grid(column=1, row=0, sticky = "nwes")
+
+        #Top Label widget
+        self.vectorEntryLabel = ttk.Label(self.leftFrame, text="Enter Multiple Vector Components", font="bold")
+        self.vectorEntryLabel.grid(column=1, row=1, padx=(20,20), pady=(20,20), sticky=(W))
+
+        #Label and input box for x component
+        self.componentLabelX = ttk.Label(self.leftFrame, text="X-Component")
+        self.componentLabelX.grid(column=1, row=2)
+        
+        #Entry box for the x component
+        self.vectorEntryX = ttk.Entry(self.leftFrame, width=20)
+        self.vectorEntryX.grid(pady=(10,10), column=1, row=3)
+        
+        #Label and input box for y component
+        self.componentLabelY = ttk.Label(self.leftFrame, text="Y-Component")
+        self.componentLabelY.grid(column=1, row=4)
+     
+        #Entry box for the y component
+        self.vectorEntryY = ttk.Entry(self.leftFrame, width=20)
+        self.vectorEntryY.grid(pady=(10,10), column=1, row=5)
+
+        #Add vector to list of vectors to graph
+        self.addVectorButton = ttk.Button(self.leftFrame, text="Add Vector", width=20, command=lambda: self.addVectorToList(self.vectorEntryX.get(), self.vectorEntryY.get(), self.vectorList, self.rightFrame))
+        self.addVectorButton.grid(column=1, row=6)
+
+        #Plots the vectors on a graph.
+        self.button3 = ttk.Button(self.leftFrame, text="Plot Equilibrium Vector", width=20, command=lambda: self.resultantGraph(self.vectorList))
+        self.button3.grid(pady=(30,0), column=1, row=7)
     
-    #Label and input box for y component
-    ttk.Label(leftFrame, text="Y-Component").grid(column=1, row=4)
-    vector_y_entry = ttk.Entry(leftFrame, width=20)
-    vector_y_entry.grid(pady=(10,10), column=1, row=5)
- 
-    #TODO create list of vectors holding multiple 2D vector components so user can keep track of what they entered
-    vectorLabel = ttk.Label(rightFrame, text="Current Vectors:")
-    vectorLabel.grid(padx=(100, 100), pady=(20,20), column=1, row=1)
-  
-    #Add vector to list of vectors to graph
-    button2 = ttk.Button(leftFrame, text="Add Vector", width = 20, command=lambda: addVectorToList(vector_x_entry.get(), vector_y_entry.get(), vectorList, rightFrame))
+        #Label to show the current vectors.
+        self.currentVectorLabel = ttk.Label(self.rightFrame, text="Current Vectors:")
+        self.currentVectorLabel.grid(padx=(100, 100), pady=(20,20), column=1, row=1)
 
-    button2.grid(column=1, row=6)
-
-    #Plots the vectors on a graph.
-    button3 = ttk.Button(leftFrame, text="Find Equilibrium Vector", width = 20, command=lambda: resultantGraph(vectorList))
-    button3.grid(pady=(30,0), column=1, row=7)
 
 def showHelp():
     response = '''Hello welcome to vector calc this program aids in the visualization of vectors as well as their calculations.
@@ -302,12 +406,13 @@ menuBar.add_cascade(label="Calculations", menu=calcButton)
 menuBar.add_cascade(label="Help", menu=helpButton)
 
 #Adds commands to the "Graph" menu button
-graphButton.add_command(label="Plot single 2D vector", command=lambda: plotSingle2DVector(refreshFrame))
-graphButton.add_command(label="Plot multiple 2D vectors", command=lambda: plotMultiple2DVectors(refreshFrame))
+
+graphButton.add_command(label="Plot single 2D vector", command=lambda: redrawFrame(refreshFrame, "plotSingle2DVector"))
+graphButton.add_command(label="Plot multiple 2D vectors", command=lambda: redrawFrame(refreshFrame, "plotMultiple2DVectors"))
 
 #Adds commands to the "Calculations" menu button
-calcButton.add_command(label="Resultant 2D vector", command=lambda: resultant2DVector(refreshFrame))
-calcButton.add_command(label="Find equlibrium 2D vector", command=lambda: equilibrium2DVector(refreshFrame))
+calcButton.add_command(label="Resultant 2D vector", command=lambda: redrawFrame(refreshFrame, "findResultant2DVectors"))
+calcButton.add_command(label="Find equlibrium 2D vector", command=lambda: redrawFrame(refreshFrame, "findEquilibrium2DVectors"))
 
 #Adds command to the Help menu for getting help
 helpButton.add_command(label="Get help", command=showHelp)

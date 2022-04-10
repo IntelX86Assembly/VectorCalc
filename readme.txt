@@ -1,14 +1,8 @@
-Version 1.1beta
-***should not be used. 
+Version 1.2beta
 
-To Run)
-$ python3 currentGui.py
+In this version code refactoring was performed and the finer
+planning details of how the classes will interface is performed.
 
-Description)
-This version has the functionality that the final product should 
-have but is not stable and the gui is not complete. It can be thought
-of as a mock up that extends version1.0. The colored backgrounds here
-are the frames and are used for debugging. 
+Primarily code sharing and code efficiency is improved. 
 
-This version is to test the function of Tkinter and whether it can
-graph a single or multiple vectors
+
