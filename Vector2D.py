@@ -19,10 +19,6 @@ class Vector2D(Vector):
 
     def calcAngle(self):
          self.angle = math.acos(self.x_component/self.magnitude) 
-
-
-
-    #Prints components for 2D vector to terminal
-    def printComponents(self) :
-        print("x component = " + str(self.x_component) + "\ty component = " + str(self.y_component))
-
+ 
+    def toString(self): 
+        print("X = " + str(self.get_x_component()) + "   Y = " + str(self.get_y_component()))  

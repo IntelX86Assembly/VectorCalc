@@ -62,7 +62,7 @@ class Vector2D_Graph:
     def calcScale(self, vectorList):
         prevMax = 0 
         scaleSize = 0
-        for vector in vectorList:
+        for vector in vectorList.getVectorList():
             # Gets the max value of the current vector either x component or 
             # y component and checks if it is bigger than the largest vector
             # component. This is done to scale the window automatically.
@@ -101,7 +101,8 @@ class Vector2D_Graph:
     
     def graphMultipleVectors(self, vectorList):
         
-        lengthList = len(vectorList)
+        print(vectorList.toString())
+        lengthList = vectorList.getSize()
         # Holds origin for graph
         origin_points = [0] * lengthList
 
@@ -112,7 +113,7 @@ class Vector2D_Graph:
         #used as index for creating array of x-values.
         vectorCounter = 0
 
-        for vector in vectorList:
+        for vector in vectorList.getVectorList():
             x_components[vectorCounter] = vector.get_x_component() 
             y_components[vectorCounter] = vector.get_y_component() 
             vectorCounter = vectorCounter + 1
@@ -137,7 +138,7 @@ class Vector2D_Graph:
 
     def graphResultant(self, vectorList):
         
-        lengthList = len(vectorList)
+        lengthList = vectorList.getSize()
         # Holds origin for graph
         origin_points = [0]
 
@@ -152,7 +153,7 @@ class Vector2D_Graph:
         #TODO find a way to get the x_componentSum and y_componentSum and pass them to the quiver method
         #I am having trouble with the scope and getting access to these values outside the for loop
         #Calculate resultant
-        for vector in vectorList:
+        for vector in vectorList.getVectorList():
             x_componentSum += vector.get_x_component()
             y_componentSum += vector.get_y_component()
        
@@ -160,11 +161,8 @@ class Vector2D_Graph:
         x_components[0] = x_componentSum 
         y_components[0] = y_componentSum
 
-        #creates a list with single vector to pass to scaleSize function
-        scaleList = []
-        scaleList.append(Vector2D(float(x_componentSum), float(y_componentSum)))
         #Scales vector graph to fit largest vector
-        scaleSize = self.calcScale(scaleList)
+        scaleSize = self.calcScale(vectorList)
 
         # Creating plot 
         plotter.quiver(origin_points, origin_points, x_components, y_components, angles = 'xy', scale_units= 'xy', scale=1)
