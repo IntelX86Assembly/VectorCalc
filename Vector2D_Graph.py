@@ -4,6 +4,10 @@ import math
 #import pyplot to plot the vectors in a graph
 import matplotlib.pyplot as plotter
 
+#import the vector classes to instantiate vector objects
+#and gain access to their properties and methods
+from Vector2D import *
+
 ####################################################################################################
 class Vector2D_Graph:
 
@@ -57,6 +61,7 @@ class Vector2D_Graph:
     #of the vectors in the vector list and scales the graph by comparing these values
     def calcScale(self, vectorList):
         prevMax = 0 
+        scaleSize = 0
         for vector in vectorList:
             # Gets the max value of the current vector either x component or 
             # y component and checks if it is bigger than the largest vector
@@ -120,9 +125,54 @@ class Vector2D_Graph:
         plotter.title("Graph of Multiple Vectors")
 
         # x-limit and y-limit of graph that is drawn
-        plotter.xlim(-1.25 * scaleSize, 2 * scaleSize)
-        plotter.ylim(-1.25 * scaleSize, 2 * scaleSize)
+        plotter.xlim(-1.25 * max(abs(scaleSize), abs(scaleSize)), 1.25 * max(abs(scaleSize) , abs(scaleSize)))
+        plotter.ylim(-1.25 * max(abs(scaleSize), abs(scaleSize)), 1.25 * max(abs(scaleSize) , abs(scaleSize)))
 
+
+    
+        #Draw and display graph.
+        plotter.grid()
+        plotter.show()
+
+
+    def graphResultant(self, vectorList):
+        
+        lengthList = len(vectorList)
+        # Holds origin for graph
+        origin_points = [0]
+
+        # Creates empty list. Will later be filled with the x and y components of vector objects
+        x_components = [0]
+        y_components = [0]
+       
+        #Stores resultant values
+        x_componentSum = 0 
+        y_componentSum = 0    
+
+        #TODO find a way to get the x_componentSum and y_componentSum and pass them to the quiver method
+        #I am having trouble with the scope and getting access to these values outside the for loop
+        #Calculate resultant
+        for vector in vectorList:
+            x_componentSum += vector.get_x_component()
+            y_componentSum += vector.get_y_component()
+       
+        #passed as two arrays to quiver for graphing the resultant vector
+        x_components[0] = x_componentSum 
+        y_components[0] = y_componentSum
+
+        #creates a list with single vector to pass to scaleSize function
+        scaleList = []
+        scaleList.append(Vector2D(float(x_componentSum), float(y_componentSum)))
+        #Scales vector graph to fit largest vector
+        scaleSize = self.calcScale(scaleList)
+
+        # Creating plot 
+        plotter.quiver(origin_points, origin_points, x_components, y_components, angles = 'xy', scale_units= 'xy', scale=1)
+        plotter.title("Graph of Multiple Vectors")
+
+        # x-limit and y-limit of graph that is drawn
+        plotter.xlim(-1.25 * max(abs(scaleSize), abs(scaleSize)), 1.25 * max(abs(scaleSize) , abs(scaleSize)))
+        plotter.ylim(-1.25 * max(abs(scaleSize), abs(scaleSize)), 1.25 * max(abs(scaleSize) , abs(scaleSize)))
     
         #Draw and display graph.
         plotter.grid()
